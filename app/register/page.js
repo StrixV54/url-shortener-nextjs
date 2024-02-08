@@ -35,10 +35,12 @@ export default function Register() {
         }
       );
 
-      console.log(response);
+      // console.log(response);
       if (!response.ok) {
-        throw response;
+        const errorJson = await response.json();
+        throw errorJson?.message;
       }
+
       const result = await response.json();
 
       localStorage.setItem(
@@ -60,7 +62,7 @@ export default function Register() {
         setIsLogged(true);
       }
     } catch (error) {
-      toast.error(error?.statusText, { id: toastId });
+      toast.error(error, { id: toastId });
       console.log("signIn had an error", error);
     }
   };

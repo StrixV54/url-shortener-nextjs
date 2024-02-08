@@ -35,7 +35,8 @@ export default function Login() {
       );
 
       if (!response.ok) {
-        throw response;
+        const errorJson = await response.json();
+        throw errorJson?.message;
       }
       const result = await response.json();
 
@@ -58,7 +59,7 @@ export default function Login() {
         setIsLogged(true);
       }
     } catch (error) {
-      toast.error(error?.statusText, {
+      toast.error(error, {
         id: toastId,
       });
       console.log("signIn had an error: ", error);
