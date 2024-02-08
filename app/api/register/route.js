@@ -10,9 +10,15 @@ export async function POST(request) {
     let res = await UserModel.findOne({ email });
 
     if (res)
-      return Response.json({
-        message: "Data already existed",
-      });
+      return new Response(
+        JSON.stringify({
+          message: "Email already present.",
+        }),
+        {
+          status: 400,
+          statusText: "Email already present.",
+        }
+      );
 
     const hashedPassword = await bcrypt.hash(password, 12);
     res = new UserModel({ fullname: name, email, password: hashedPassword });

@@ -7,18 +7,23 @@ export async function POST(request) {
     await connectDB();
     const { email, password } = await request.json();
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-    let res = await UserModel.findOne({ email, password: hashedPassword });
+    let res = await UserModel.findOne({ email });
 
-    if (res)
+    if (!res)
+      return new Response(`Record couldn't be found, check body.`, {
+        status: 400,
+        statusText: "Record couldn't be found",
+      });
+    const isMatch = await bcrypt.compare(password, res?.password);
+    if (isMatch)
       return Response.json({
         message: "Data found",
         user: { email: res?.email, name: res?.fullname, userId: res?._id },
       });
-    else
-      return new Response(`Record couldn't be found, check body.`, {
-        status: 400,
-      });
+    return new Response(`Password didn't match.`, {
+      status: 400,
+      statusText: "Password didn't match.",
+    });
   } catch (error) {
     console.error(error);
     return new Response(`Something went wrong : ${error?.message}`, {

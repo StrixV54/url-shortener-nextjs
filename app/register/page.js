@@ -35,6 +35,7 @@ export default function Register() {
         }
       );
 
+      console.log(response);
       if (!response.ok) {
         throw response;
       }

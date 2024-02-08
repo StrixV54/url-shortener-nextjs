@@ -58,7 +58,7 @@ export default function Login() {
         setIsLogged(true);
       }
     } catch (error) {
-      toast.error(error?.status === 400 ? "Wrong Credentials" : "Bad Request", {
+      toast.error(error?.statusText, {
         id: toastId,
       });
       console.log("signIn had an error: ", error);
