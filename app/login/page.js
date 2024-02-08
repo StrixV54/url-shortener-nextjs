@@ -49,18 +49,20 @@ export default function Login() {
       });
 
       if (res?.error === "Invalid password" || res?.error === "Invalid user") {
+        toast.error(res?.error);
         console.log("Error: ", res?.error);
       } else {
+        toast.success("Logging in...");
         setIsLogged(true);
       }
     } catch (error) {
+      toast.error(error?.status === 400 ? "Wrong Credentials" : "Bad Request");
       console.log("signIn had an error: ", error);
     }
   };
 
   useEffect(() => {
     if (isLogged) {
-      toast.success("Logging in...");
       router.push("/dashboard");
     }
   }, [isLogged]);
@@ -83,15 +85,19 @@ export default function Login() {
           <div className="card-body gap-6">
             <div className="w-full text-center text-2xl font-medium">Login</div>
             <input
+              required
               placeholder="Email"
               name="email"
+              type="email"
               className="input input-bordered"
               onChange={handleChange}
               value={formData.email}
             />
             <input
+              required
               placeholder="Password"
               name="password"
+              type="password"
               className="input input-bordered"
               onChange={handleChange}
               value={formData.password}

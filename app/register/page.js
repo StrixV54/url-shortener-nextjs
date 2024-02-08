@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const router = useRouter();
@@ -49,11 +50,13 @@ export default function Register() {
       });
 
       if (res?.error === "Invalid password" || res?.error === "Invalid user") {
+        toast.error(res?.error);
         console.log("Error", res?.error);
       } else {
         setIsLogged(true);
       }
     } catch (error) {
+      toast.error(error?.statusText);
       console.log("signIn had an error", error);
     }
   };
@@ -88,6 +91,7 @@ export default function Register() {
             <input
               placeholder="Name"
               name="name"
+              type="text"
               className="input input-bordered"
               onChange={handleChange}
               value={formData.name}
@@ -95,6 +99,7 @@ export default function Register() {
             <input
               placeholder="Email"
               name="email"
+              type="email"
               className="input input-bordered"
               onChange={handleChange}
               value={formData.email}
@@ -102,6 +107,7 @@ export default function Register() {
             <input
               placeholder="Password"
               name="password"
+              type="password"
               className="input input-bordered"
               onChange={handleChange}
               value={formData.password}

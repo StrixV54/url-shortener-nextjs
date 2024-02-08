@@ -14,8 +14,8 @@ export async function POST(request) {
         user: { email: res?.email, name: res?.fullname, userId: res?._id },
       });
     else
-      return Response.json({
-        message: "Record does not exist",
+      return new Response(`Record couldn't be found, check body.`, {
+        status: 400,
       });
   } catch (error) {
     console.error(error);
