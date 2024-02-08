@@ -38,7 +38,7 @@ export default function Home() {
     }
   }, []);
 
-  if (loading) return <Loading isFullScreen={"true"} />;
+  if (loading) return <Loading isFullScreen={true} />;
 
   return (
     <>
