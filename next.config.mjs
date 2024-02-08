@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverActions: true,
   async redirects() {
     return [
       {
