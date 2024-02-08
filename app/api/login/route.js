@@ -1,12 +1,14 @@
 import connectDB from "@/mongodb/connect";
 import UserModel from "@/mongodb/userSchema";
+import bcrypt from "bcrypt";
 
 export async function POST(request) {
   try {
     await connectDB();
     const { email, password } = await request.json();
 
-    let res = await UserModel.findOne({ email, password });
+    const hashedPassword = await bcrypt.hash(password, 12);
+    let res = await UserModel.findOne({ email, password: hashedPassword });
 
     if (res)
       return Response.json({

@@ -23,6 +23,8 @@ export default function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    const toastId = toast.loading("Please wait...checking");
+
     try {
       const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/login",
@@ -48,15 +50,17 @@ export default function Login() {
         redirect: false,
       });
 
-      if (res?.error === "Invalid password" || res?.error === "Invalid user") {
-        toast.error(res?.error);
+      if (res?.error) {
+        toast.error(res?.error, { id: toastId });
         console.log("Error: ", res?.error);
       } else {
-        toast.success("Logging in...");
+        toast.success("Logging in...", { id: toastId });
         setIsLogged(true);
       }
     } catch (error) {
-      toast.error(error?.status === 400 ? "Wrong Credentials" : "Bad Request");
+      toast.error(error?.status === 400 ? "Wrong Credentials" : "Bad Request", {
+        id: toastId,
+      });
       console.log("signIn had an error: ", error);
     }
   };

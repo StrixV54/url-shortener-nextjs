@@ -1,5 +1,6 @@
 import connectDB from "@/mongodb/connect";
 import UserModel from "@/mongodb/userSchema";
+import bcrypt from "bcrypt";
 
 export async function POST(request) {
   try {
@@ -13,8 +14,8 @@ export async function POST(request) {
         message: "Data already existed",
       });
 
-    // await bcrypt.hash(password, 12);
-    res = new UserModel({ fullname: name, email, password });
+    const hashedPassword = await bcrypt.hash(password, 12);
+    res = new UserModel({ fullname: name, email, password: hashedPassword });
     await res.save();
     return Response.json({
       message: "Successfully created the record.",
