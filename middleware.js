@@ -15,10 +15,11 @@ export default withAuth(
     const isGuestRoute = guestRoutes.some((route) =>
       request.nextUrl.pathname.startsWith(route)
     );
+    // console.log(request.nextUrl);
 
     if (!token && isAuthRoute) {
       const redirectUrl = new URL("/login", request.url);
-      redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href);
+      // redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href);
       return NextResponse.redirect(redirectUrl);
     }
 
