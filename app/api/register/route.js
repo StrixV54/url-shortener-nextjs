@@ -13,6 +13,7 @@ export async function POST(request) {
         message: "Data already existed",
       });
 
+    // await bcrypt.hash(password, 12);
     res = new UserModel({ fullname: name, email, password });
     await res.save();
     return Response.json({
