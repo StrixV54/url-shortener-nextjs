@@ -15,15 +15,17 @@ export default withAuth(
     const isGuestRoute = guestRoutes.some((route) =>
       request.nextUrl.pathname.startsWith(route)
     );
-
+    if (isIndexpage && !token) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
     if (!token && isAuthRoute) {
       const redirectUrl = new URL("/login", request.url);
-      redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href);
+      // redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href);
       return NextResponse.redirect(redirectUrl);
     }
 
     if (token) {
-      if (isIndexpage || isGuestRoute) {
+      if (isGuestRoute) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
     }
