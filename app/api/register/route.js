@@ -11,12 +11,9 @@ export async function POST(request) {
 
     if (res)
       return new Response(
-        JSON.stringify({
-          message: "Email already present.",
-        }),
+        JSON.stringify({ message: "Email already present." }),
         {
           status: 400,
-          statusText: "Email already present.",
         }
       );
 
