@@ -62,7 +62,7 @@ export default function Register() {
         setIsLogged(true);
       }
     } catch (error) {
-      toast.error(error, { id: toastId });
+      toast.error(error || "Something went wrong", { id: toastId });
       console.log("signIn had an error", error);
     }
   };
