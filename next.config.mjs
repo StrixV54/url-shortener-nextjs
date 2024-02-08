@@ -8,6 +8,7 @@ const nextConfig = {
         source: "/",
         destination: "/login",
         basePath: false,
+        permanent: false,
       },
     ];
   },
