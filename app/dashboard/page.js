@@ -1,10 +1,10 @@
 "use client";
 import SingleRowComponent from "@/components/SingleRowBox";
-import { getServerSession } from "next-auth";
 import SignOut from "@/components/SignOut";
 import InputLinkForm from "../../components/InputLinkForm";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "/";
 
@@ -20,10 +20,15 @@ export default function Home() {
   const [list, setList] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof localStorage !== "undefined") {
       const userRecord = localStorage.getItem("shortener-user");
+      if (!userRecord) {
+        router.push("/login");
+        return;
+      }
       const parsedRecord = JSON.parse(userRecord);
       setUser(parsedRecord);
       fetchDataAPI(parsedRecord?.userId)
@@ -32,6 +37,8 @@ export default function Home() {
         .finally(() => setLoading(false));
     }
   }, []);
+
+  if (loading) return <Loading isFullScreen={"true"} />;
 
   return (
     <>
