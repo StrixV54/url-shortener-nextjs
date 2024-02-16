@@ -28,24 +28,24 @@ export const registerFormSubmit = async (_prevState, formData) => {
   }
 };
 
-export const loginFormSubmit = async (_prevState, formData) => {
-  try {
-    await connectDB();
-    let email = formData.get("email");
-    let password = formData.get("password");
+// export const loginFormSubmit = async (_prevState, formData) => {
+//   try {
+//     await connectDB();
+//     let email = formData.get("email");
+//     let password = formData.get("password");
 
-    let res = await UserModel.findOne({ email });
-    if (!res) return { message: "Failed to find record, not registered." };
+//     let res = await UserModel.findOne({ email });
+//     if (!res) return { message: "Failed to find record, not registered." };
 
-    const isMatch = await bcrypt.compare(password, res?.password);
-    if (!isMatch) return { message: "Password didn't match." };
+//     const isMatch = await bcrypt.compare(password, res?.password);
+//     if (!isMatch) return { message: "Password didn't match." };
 
-    return { message: "true", email, password };
-  } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong." };
-  }
-};
+//     return { message: "true", email, password };
+//   } catch (error) {
+//     console.log(error);
+//     return { message: "Something went wrong." };
+//   }
+// };
 
 export const addRecordAction = async (_prevState, formData) => {
   let url = formData.get("link");

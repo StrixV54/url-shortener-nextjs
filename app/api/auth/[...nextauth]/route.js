@@ -1,6 +1,9 @@
 import { authenticate } from "@/lib/authenticate";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import UserModel from "@/mongodb/userSchema";
 
 export const authOptions = {
   providers: [
@@ -22,21 +25,32 @@ export const authOptions = {
       },
       async authorize(credentials) {
         if (typeof credentials !== "undefined") {
-          const res = await authenticate({
-            email: credentials.email,
-            password: credentials.password,
-          });
+          // const res = await authenticate({
+          //   email: credentials.email,
+          //   password: credentials.password,
+          // });
+          const { email, password } = credentials;
 
-          if (typeof res !== "undefined") {
-            if (res.error === "invalid_password") {
-              throw new Error("Invalid password");
-            } else if (res.error === "invalid_user") {
-              throw new Error("Invalid user");
-            } else {
-              return { ...res };
+          try {
+            let res = await UserModel.findOne({ email });
+
+            if (res) {
+              const isMatch = await bcrypt.compare(password, res?.password);
+              if (!isMatch) throw new Error("Password didn't match.");
+
+              const accessToken = jwt.sign({ email: email }, process.env.NEXTAUTH_JWT_SECRET, {
+                expiresIn: "1h",
+              });
+              return {
+                status: 202,
+                token: accessToken,
+                user: res,
+              };
             }
-          } else {
-            throw new Error("Unknown error");
+            if (typeof res == "undefined" || res?.error) throw new Error("Unknown error " + res?.error);
+          } catch (error) {
+            console.log(error);
+            throw new Error("Something went wrong");
           }
         } else {
           throw new Error("Missing credentials");
