@@ -1,9 +1,9 @@
-import { authenticate } from "@/lib/authenticate";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import UserModel from "@/mongodb/userSchema";
+import connectDB from "@/mongodb/connect";
 
 export const authOptions = {
   providers: [
@@ -32,6 +32,7 @@ export const authOptions = {
           const { email, password } = credentials;
 
           try {
+            await connectDB();
             let res = await UserModel.findOne({ email });
 
             if (res) {
