@@ -18,9 +18,9 @@ export default withAuth(
     if (!token && isAuthRoute) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    // if (token && isGuestRoute) {
-    //     return NextResponse.redirect(new URL("/dashboard", request.url));
-    // }
+    if (token && isGuestRoute) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
     return NextResponse.next();
   },
   {
