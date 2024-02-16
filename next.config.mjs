@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // reactStrictMode: true,
-  // basePath: "/login",
+  basePath: "/login",
   async redirects() {
     return [
       {
