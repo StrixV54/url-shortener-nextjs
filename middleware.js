@@ -9,25 +9,19 @@ export default withAuth(
       secret: process.env.NEXTAUTH_JWT_SECRET,
     });
     const isIndexpage = request.nextUrl.pathname === "/";
-    const isAuthRoute = authRoutes.some((route) =>
-      request.nextUrl.pathname.startsWith(route)
-    );
-    const isGuestRoute = guestRoutes.some((route) =>
-      request.nextUrl.pathname.startsWith(route)
-    );
+    const isAuthRoute = authRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
+    const isGuestRoute = guestRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
+    console.log(request.nextUrl.pathname, isIndexpage, isAuthRoute, isGuestRoute, token?.status === 202);
     if (isIndexpage && !token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
     if (!token && isAuthRoute) {
-      const redirectUrl = new URL("/login", request.url);
-      return NextResponse.redirect(redirectUrl);
+      return NextResponse.redirect(new URL("/login", request.url));
     }
-
-    if (token) {
-      if (isGuestRoute) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
-    }
+    // if (token && isGuestRoute) {
+    //     return NextResponse.redirect(new URL("/dashboard", request.url));
+    // }
+    return NextResponse.next();
   },
   {
     callbacks: {
@@ -35,7 +29,7 @@ export default withAuth(
         return true;
       },
     },
-  }
+  },
 );
 
 const authRoutes = ["/dashboard"];

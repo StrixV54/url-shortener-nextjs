@@ -25,10 +25,11 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+    // if (!session) {
+    //   router.push("/login");
+    //   return;
+    // }
+    if (session)
     fetchDataAPI(user?._id)
       .then((res) => {
         setList(res?.list);
