@@ -8,7 +8,6 @@ export default function SignOut() {
       <button
         className="p-1 rounded-md border border-slate-400 bg-white/10 hover:bg-white/40"
         onClick={() => {
-          localStorage.removeItem("shortener-user");
           signOut({ redirect: true, callbackUrl: "/login" });
         }}
       >

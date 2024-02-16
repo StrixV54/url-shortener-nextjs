@@ -1,47 +1,31 @@
 "use client";
 
-import { BASE_URL } from "@/app/dashboard/page";
-import { isUrlValid } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useFormState } from "react-dom";
+import SubmitBtn from "./SubmitBtn";
+import { addRecordAction } from "@/actions/server";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
-export default function InputLinkForm({ userId, loading }) {
-  const inputRef = useRef(null);
+export default function InputLinkForm({ userId }) {
+  const [state, formAction] = useFormState(addRecordAction, { message: "", error: false });
+  const inputRef = useRef();
 
-  const addDataAPI = async (event) => {
-    event.preventDefault();
-
-    const formdata = new FormData(event.target);
-
-    if (!isUrlValid(formdata.get("link"))) {
-      toast.error("Invalid Url");
-      return;
+  useEffect(() => {
+    if (state?.error) toast.error(state?.message);
+    else if (state?.message) {
+      toast.success(state?.message);
+      setTimeout(() => window.location.reload(), 1000);
     }
-
-    const body = {
-      originalUrl: formdata.get("link"),
-      userId,
-    };
-    inputRef.current.value = "";
-    try {
-      await fetch(`${BASE_URL}/api/short`, {
-        method: "POST",
-        body: JSON.stringify(body),
-        cache: "no-cache",
-      });
-      toast.success("Short URL Created");
-      setTimeout(() => window.location.reload(), 600);
-      // window.location.reload();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  }, [state?.message]);
 
   return (
     <form
       className="flex sm:gap-8 gap-3 w-full justify-center"
-      onSubmit={addDataAPI}
+      action={(formData) => {
+        formData.append("userId", userId);
+        inputRef.current.value = "";
+        formAction(formData);
+      }}
     >
       <input
         type="text"
@@ -52,13 +36,7 @@ export default function InputLinkForm({ userId, loading }) {
         placeholder="Enter or paste your link"
         className="input input-bordered max-w-[700px] w-full"
       />
-      <button
-        disabled={loading}
-        type="submit"
-        className="btn btn-primary mb-3 text-white bg-[#4a58f1] border-none disabled:bg-slate-700"
-      >
-        Create Short Link
-      </button>
+      <SubmitBtn label={"Create Short Link"} />
     </form>
   );
 }

@@ -2,7 +2,7 @@ import { authenticate } from "@/lib/authenticate";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",

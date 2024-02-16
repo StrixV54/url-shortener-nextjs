@@ -1,7 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Suspense } from "react";
-import Loading from "@/components/Loading";
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,8 +12,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Suspense fallback={<Loading />}>{children}</Suspense>
+      <body className={inter.className} suppressHydrationWarning={true}>
+        {children}
         <Toaster />
       </body>
     </html>

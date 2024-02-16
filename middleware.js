@@ -20,7 +20,6 @@ export default withAuth(
     }
     if (!token && isAuthRoute) {
       const redirectUrl = new URL("/login", request.url);
-      // redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href);
       return NextResponse.redirect(redirectUrl);
     }
 
@@ -40,4 +39,4 @@ export default withAuth(
 );
 
 const authRoutes = ["/dashboard"];
-const guestRoutes = ["/login", "/register", "/api"];
+const guestRoutes = ["/login", "/register"];
